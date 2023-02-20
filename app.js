@@ -32,3 +32,24 @@ productsDiv.addEventListener("click", (event) => {
   calculateProductPrice(event.target);
   calculateCartPrice();
 });
+
+const calculateProductPrice = (btn) => {
+  const productInfoDiv = btn.parentElement.parentElement;
+  const price = Number(productInfoDiv.querySelector(".product-price strong").innerText);
+  const quantity = Number(productInfoDiv.querySelector(".quantity").innerText);
+  const productTotalDiv = productInfoDiv.querySelector(".price");
+  productTotalDiv.innerText = (price * quantity).toFixed(2);
+}
+
+const calculateCartPrice = () => {
+  const productsTotalPriceDivs = document.querySelectorAll(".price");
+  const subtotal = [...productsTotalPriceDivs].reduce((acc,price)=> acc+ Number(price.innerText),0);
+  const taxPrice = subtotal * localStorage.getItem("taxRate");
+  const totalShippingPrice = parseFloat(subtotal>0 && subtotal < localStorage.getItem("shippingFreePrice") ? localStorage.getItem("shippingPrice") : 0 );
+  const totalCart = subtotal + totalShippingPrice + taxPrice;
+
+  document.querySelector("#subtotalCart").innerText = subtotal.toFixed(2);
+  document.querySelector("#taxRateCart").innerText = taxPrice.toFixed(2);
+  document.querySelector("#shippingCart").innerText = totalShippingPrice.toFixed(2);
+  document.querySelector("#totalCart").innerText = totalCart.toFixed(2);
+}
